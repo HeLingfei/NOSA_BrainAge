@@ -21,17 +21,17 @@ torch.set_default_tensor_type(torch.FloatTensor)
 
 #划分训练集验证集训练
 
-batch_size = 10
-LR = 0.001
-Epoch = 500
+batch_size = 12
+LR = 0.005
+Epoch = 1000
 MAE = 4.7
-expdir = '/n02dat01/users/cchen/simple_ckpts2'
-logdir = './logdir'
-datapath = '/n02dat01/users/cchen/Train/*.nii'
+expdir = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge/results/simple_ckpts'
+logdir = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge/results/train_logs'
+datapath = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge/Train/*.nii'
 labelpath = './label/Train.csv'
-testdatapath = '/n02dat01/users/cchen/Test/*.nii'
-testlabelpath = './label/Test.csv'
-test2datapath = '/n02dat01/users/cchen/HCP/hcp_test/*.nii'
+testdatapath = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge/Test/multisite_test/*.nii'
+testlabelpath = './label/multi_center_test.csv'
+test2datapath = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge/Test/hcp_test/*.nii'
 test2labelpath = './label/hcp_test.csv'
 
 #mf.set_random_seeds(6)
