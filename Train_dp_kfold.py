@@ -20,19 +20,17 @@ torch.set_default_tensor_type(torch.FloatTensor)
 #10折交叉验证方法
 k = 10
 batch_size = 12
-LR = 0.01
-Epoch = 500
+LR = 0.005
+Epoch = 1000
 MAE = 4.7
-
-#设置各路径
-expdir = '/n02dat01/users/cchen/simple_ckpts2'
-logdir = './logdir'
-datapath = '/n02dat01/users/cchen/Train/*.nii'
+expdir = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge/results/simple_ckpts'
+logdir = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge/results/train_logs'
+datapath = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge/Train/*.nii'
 labelpath = './label/Train.csv'
-testdatapath = '/n02dat01/users/cchen/HCP/hcp_test/*.nii'
-testlabelpath = './label/hcp_test.csv'
-test2datapath = '/n02dat01/users/cchen/Test/*.nii'
-test2labelpath = './label/Test.csv'
+testdatapath = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge/Test/multisite_test/*.nii'
+testlabelpath = './label/multi_center_test.csv'
+test2datapath = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge/Test/hcp_test/*.nii'
+test2labelpath = './label/hcp_test.csv'
 
 #创建实验目录以及日志目录
 mf.create_exp_directory(expdir)
