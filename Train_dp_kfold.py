@@ -198,13 +198,15 @@ while epoch < Epoch:
         k_valid_loss += current_loss2
 
     avg_valid_mae = k_valid_loss / k
-    logger.info('*' * 50)
+    logger.info('-' * 50)
     logger.info('[Epoch:%d]:' % (epoch))
     logger.info('10 Fold Average train loss is: %.4f' % (k_train_loss / k))
     logger.info('10 Fold Average train mae is: %.4f' % (k_mae / k))
     logger.info('10 Fold Average validation mae is: %.4f' % avg_valid_mae)
+    logger.info('-' * 50)
 
     if avg_valid_mae < MAE:
+        logger.info('*' * 50)
         # 保存在验证集上MAE最优的模型
         MAE = avg_valid_mae
         save_name = os.path.join(expdir, 'Epoch_' + str(epoch).zfill(2) + '_training_state.pkl')
