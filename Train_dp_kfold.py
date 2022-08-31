@@ -26,11 +26,11 @@ MAE = 4.7
 expdir = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge/results/simple_ckpts'
 logdir = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge/results/train_logs'
 datapath = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge/Train/*.nii'
-labelpath = './label/Train.csv'
+labelpath = '/HOME/scz0774/run/lfhe/experiments/simple-brain-age/label/Train.csv'
 testdatapath = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge/Test/multisite_test/*.nii'
-testlabelpath = './label/multi_center_test.csv'
+testlabelpath = '/HOME/scz0774/run/lfhe/experiments/simple-brain-age/label/multi_center_test.csv'
 test2datapath = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge/Test/hcp_test/*.nii'
-test2labelpath = './label/hcp_test.csv'
+test2labelpath = '/HOME/scz0774/run/lfhe/experiments/simple-brain-age/label/hcp_test.csv'
 
 #创建实验目录以及日志目录
 mf.create_exp_directory(expdir)
