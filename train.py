@@ -23,8 +23,8 @@ k = 10
 batch_size = 12
 LR = 0.001
 Epoch = 400
-MAE = 100
-early_stop_epoch_num = 30
+MAE = 8
+# early_stop_epoch_num = 50
 
 base_data_dir = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge'
 # base_data_dir = r'D:\documents\AcademicDocuments\MasterCandidate\research\文献\可解释脑龄预测工作汇总\数据'
@@ -109,7 +109,7 @@ Loss_func2 = nn.L1Loss()
 kf = KFold(n_splits=k, shuffle=True)
 logger.info('*' * 50)
 logger.info(
-    f'Starting Training\n{experiment_id}, {k}_fold\nbatch_size: {batch_size}\nlr: {LR}\nEpoch: {Epoch}\nearly_stop_epoch_num: {early_stop_epoch_num}')
+    f'Starting Training\n{experiment_id}, {k}_fold\nbatch_size: {batch_size}\nlr: {LR}\nEpoch: {Epoch}')
 logger.info('*' * 50)
 for kf_index, (train_indexes, validate_indexes) in enumerate(kf.split(path)):
     model = get_model(My_Network)
@@ -120,7 +120,7 @@ for kf_index, (train_indexes, validate_indexes) in enumerate(kf.split(path)):
                                                   b_size=batch_size)
     validate_dataloader = get_data_loader_by_indexes(paths=path, labels=label, indexes=train_indexes,
                                                      data_augment=False, b_size=1)
-    early_stop_counter = 0
+    best_MAE = MAE
     for epoch in range(Epoch):
         epoch_loss = 0
         epoch_mae = 0
@@ -163,9 +163,9 @@ for kf_index, (train_indexes, validate_indexes) in enumerate(kf.split(path)):
         # 保存验证集验证最优的模型
         validate_mae = mf.evaluate(model, validate_dataloader)
         logger.info('[Fold: %d, Epoch: %d] Validation MAE: %.4f' % (kf_index + 1, epoch + 1, validate_mae))
-        if validate_mae < MAE:
+        if validate_mae < best_MAE:
             save_model(model, extra=f'Fold_{kf_index + 1}_Epoch_{epoch + 1}')
-            MAE = validate_mae
+            best_MAE = validate_mae
             early_stop_counter = 0
             # 记录此时的测试指标
             hcp_test_mae = mf.evaluate(model, hcp_test_dataloader)
@@ -175,10 +175,10 @@ for kf_index, (train_indexes, validate_indexes) in enumerate(kf.split(path)):
             logger.info('[HCP Test] MAE is: %.4f' % hcp_test_mae)
             logger.info('[Multisite Test] MAE is: %.4f' % multisite_test_mae)
             logger.info('*' * 25 + ' Better Model ' + '*' * 25)
-        else:
-            early_stop_counter += 1
-            if early_stop_counter >= early_stop_epoch_num:
-                logger.info('*' * 50)
-                logger.info(f'Early Stopping: {kf_index + 1} Fold, {epoch + 1} Epoch')
-                logger.info('*' * 50)
-                break
+        # else:
+        #     early_stop_counter += 1
+        #     if early_stop_counter >= early_stop_epoch_num:
+        #         logger.info('*' * 50)
+        #         logger.info(f'Early Stopping: {kf_index + 1} Fold, {epoch + 1} Epoch')
+        #         logger.info('*' * 50)
+        #         break
