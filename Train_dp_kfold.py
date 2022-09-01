@@ -15,6 +15,7 @@ from Network import My_Network
 from collections import OrderedDict
 from sklearn.model_selection import KFold
 import uuid
+from train import get_model, get_data_loader_by_indexes, save_model
 
 warnings.filterwarnings('ignore')
 torch.set_default_tensor_type(torch.FloatTensor)
@@ -82,36 +83,23 @@ logger.addHandler(ch)
 fh = logging.FileHandler(os.path.join(logdir, f'log_{current_id}.txt'))
 logger.addHandler(fh)
 
-model = My_Network()
-# 多gpu
-if torch.cuda.is_available():
-    torch.backends.cudnn.benchmark = True
-    model.cuda()
-    if torch.cuda.device_count() > 1:
-        model = nn.DataParallel(model)
-
 softmax = nn.Softmax(dim=1)
 Loss_func = nn.CrossEntropyLoss()
 Loss_func2 = nn.L1Loss()
-optimizer = torch.optim.SGD(model.parameters(), lr=LR, weight_decay=0.001)
-scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=50, gamma=0.3)
 
 print(f'<-------------------Starting to train {current_id}-------------------->')
 epoch_start = time.time()
 kf = KFold(n_splits=10, shuffle=True)
 
 
-def get_data_loader_by_indexes(paths, labels, indexes, data_augment, b_size):
-    paths = np.array(paths)
-    labels = np.array(labels)
-    dataset = Mydataset(paths[indexes], labels[indexes], with_augmentation=data_augment)
-    return DataLoader(dataset=dataset, batch_size=b_size, shuffle=True)
-
-
 validation_maes = []
 hcp_test_maes = []
 multisite_test_maes = []
 for kf_index, (train_indexes, validate_indexes) in enumerate(kf.split(path)):
+    model = get_model(My_Network)
+    optimizer = torch.optim.SGD(model.parameters(), lr=LR, weight_decay=0.001)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=50, gamma=0.3)
+
     train_dataloader = get_data_loader_by_indexes(paths=path, labels=label, indexes=train_indexes, data_augment=True,
                                                   b_size=batch_size)
     validate_dataloader = get_data_loader_by_indexes(paths=path, labels=label, indexes=train_indexes,
@@ -136,6 +124,7 @@ for kf_index, (train_indexes, validate_indexes) in enumerate(kf.split(path)):
             loss = Loss_func(pred_y, train_y)
             loss.backward()
             optimizer.step()
+            scheduler.step()
             epoch_loss += loss.item()
 
             # 通过softmax输出各类概率，然后乘上各自代表的年龄类再累加
@@ -175,10 +164,7 @@ for kf_index, (train_indexes, validate_indexes) in enumerate(kf.split(path)):
     validation_maes.append(validate_mae)
     hcp_test_maes.append(hcp_test_mae)
     multisite_test_maes.append(multisite_test_mae)
-    # save_name = os.path.join(expdir, f'{time.time()}' + str(epoch).zfill(2) + '_training_state.pkl')
-    # checkpoint = {"model_state_dict": model.state_dict(), "optimizer_state_dict": optimizer.state_dict(),
-    #               "epoch": epoch, "MAE": validate_mae}
-    # torch.save(checkpoint, save_name)
+
 
 epoch_finish = time.time() - epoch_start
 logger.info(f"Train {current_id}  finished in {'%.4f' % epoch_finish} seconds.")
