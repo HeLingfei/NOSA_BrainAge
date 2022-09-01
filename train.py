@@ -24,7 +24,7 @@ batch_size = 12
 LR = 0.001
 Epoch = 400
 MAE = 100
-early_stop_epoch_num = 10
+early_stop_epoch_num = 30
 
 base_data_dir = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge'
 # base_data_dir = r'D:\documents\AcademicDocuments\MasterCandidate\research\文献\可解释脑龄预测工作汇总\数据'
