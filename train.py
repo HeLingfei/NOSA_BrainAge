@@ -1,4 +1,5 @@
 import glob
+import logging
 import os
 import time
 import warnings
@@ -88,14 +89,29 @@ hcp_test_dataloader = get_data_loader_by_indexes(paths=test2_path, labels=test2_
 multisite_test_dataloader = get_data_loader_by_indexes(paths=test_path, labels=test_label,
                                                        indexes=list(range(len(test_path))), data_augment=False,
                                                        b_size=1)
+
+# 1.创建logger
+logger = logging.getLogger("train")
+logger.setLevel(logging.DEBUG)
+# 将handlers清空防止输出两次信息
+logger.handlers = []
+
+# 2.创建一个handler，用于输出到控制台
+ch = logging.StreamHandler()
+logger.addHandler(ch)
+
+# 3.创建另一个handler，用于写入日志文件
+fh = logging.FileHandler(os.path.join(logdir, f'log_{current_id}.txt'))
+logger.addHandler(fh)
+
 softmax = nn.Softmax(dim=1)
 Loss_func = nn.CrossEntropyLoss()
 Loss_func2 = nn.L1Loss()
 kf = KFold(n_splits=k, shuffle=True)
-print('*' * 50)
-print(
+logger.info('*' * 50)
+logger.info(
     f'Starting Training\n {experiment_id}, {k}_fold\nbatch_size: {batch_size}\nlr: {LR}\nEpoch: {Epoch}\nearly_stop_epoch_num: {early_stop_epoch_num}')
-print('*' * 50)
+logger.info('*' * 50)
 for kf_index, (train_indexes, validate_indexes) in enumerate(kf.split(path)):
     model = get_model(My_Network)
     optimizer = torch.optim.SGD(model.parameters(), lr=LR, weight_decay=0.001)
@@ -137,13 +153,13 @@ for kf_index, (train_indexes, validate_indexes) in enumerate(kf.split(path)):
             epoch_mae += loss2.item()
 
             if i % 10 == 9:
-                print(f'[Epoch:{epoch + 1}, Fold:{kf_index+1}, Left_Iter:{len(train_dataloader)-(i+1)}] '
+                logger.info(f'[Epoch:{epoch + 1}, Fold:{kf_index+1}, Left_Iter:{len(train_dataloader)-(i+1)}] '
                       f'Loss:{"%.4f"%loss.item()}, MAE:{"%.4f"%loss2.item()}')
 
         model.eval()
-        print('[Epoch:%d, Fold:%d] Average Training loss: %.4f' % (epoch + 1, kf_index + 1,
+        logger.info('[Epoch:%d, Fold:%d] Average Training loss: %.4f' % (epoch + 1, kf_index + 1,
                                                                    epoch_loss / len(train_dataloader)))
-        print('[Epoch:%d, Fold:%d] Average Training MAE: %.4f' % (epoch+1, kf_index + 1,
+        logger.info('[Epoch:%d, Fold:%d] Average Training MAE: %.4f' % (epoch+1, kf_index + 1,
                                                                   epoch_mae / len(train_dataloader)))
         # 保存验证集验证最优的模型
         validate_mae = mf.evaluate(model, validate_dataloader)
@@ -155,16 +171,16 @@ for kf_index, (train_indexes, validate_indexes) in enumerate(kf.split(path)):
             hcp_test_mae = mf.evaluate(model, hcp_test_dataloader)
             multisite_test_mae = mf.evaluate(model, multisite_test_dataloader)
 
-            print('*' * 25 + ' Better Model ' + '*' * 25)
-            print('[Fold: %d, Epoch: %d] Validation MAE: %.4f' % (epoch + 1, kf_index + 1, validate_mae))
-            print('[HCP Test] MAE is: %.4f' % hcp_test_mae)
-            print('[Multisite Test] MAE is: %.4f' % multisite_test_mae)
-            print('*' * 25 + ' Better Model ' + '*' * 25)
+            logger.info('*' * 25 + ' Better Model ' + '*' * 25)
+            logger.info('[Fold: %d, Epoch: %d] Validation MAE: %.4f' % (epoch + 1, kf_index + 1, validate_mae))
+            logger.info('[HCP Test] MAE is: %.4f' % hcp_test_mae)
+            logger.info('[Multisite Test] MAE is: %.4f' % multisite_test_mae)
+            logger.info('*' * 25 + ' Better Model ' + '*' * 25)
         else:
             early_stop_counter += 1
             if early_stop_counter >= early_stop_epoch_num:
-                print('*' * 50)
-                print(f'Early Stopping: {kf_index + 1} Fold, {epoch + 1} Epoch')
-                print('*' * 50)
+                logger.info('*' * 50)
+                logger.info(f'Early Stopping: {kf_index + 1} Fold, {epoch + 1} Epoch')
+                logger.info('*' * 50)
                 break
 
