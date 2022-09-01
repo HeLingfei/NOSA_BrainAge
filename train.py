@@ -26,7 +26,6 @@ Epoch = 400
 MAE = 100
 early_stop_epoch_num = 10
 
-current_id = uuid.uuid1()
 base_data_dir = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge'
 # base_data_dir = r'D:\documents\AcademicDocuments\MasterCandidate\research\文献\可解释脑龄预测工作汇总\数据'
 
@@ -101,7 +100,7 @@ ch = logging.StreamHandler()
 logger.addHandler(ch)
 
 # 3.创建另一个handler，用于写入日志文件
-fh = logging.FileHandler(os.path.join(logdir, f'log_{current_id}.txt'))
+fh = logging.FileHandler(os.path.join(logdir, f'log_{experiment_id}.txt'))
 logger.addHandler(fh)
 
 softmax = nn.Softmax(dim=1)
@@ -110,7 +109,7 @@ Loss_func2 = nn.L1Loss()
 kf = KFold(n_splits=k, shuffle=True)
 logger.info('*' * 50)
 logger.info(
-    f'Starting Training\n {experiment_id}, {k}_fold\nbatch_size: {batch_size}\nlr: {LR}\nEpoch: {Epoch}\nearly_stop_epoch_num: {early_stop_epoch_num}')
+    f'Starting Training\n{experiment_id}, {k}_fold\nbatch_size: {batch_size}\nlr: {LR}\nEpoch: {Epoch}\nearly_stop_epoch_num: {early_stop_epoch_num}')
 logger.info('*' * 50)
 for kf_index, (train_indexes, validate_indexes) in enumerate(kf.split(path)):
     model = get_model(My_Network)
