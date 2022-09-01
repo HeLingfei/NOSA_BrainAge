@@ -156,12 +156,13 @@ for kf_index, (train_indexes, validate_indexes) in enumerate(kf.split(path)):
                       f'Loss:{"%.4f"%loss.item()}, MAE:{"%.4f"%loss2.item()}')
 
         model.eval()
-        logger.info('[Epoch:%d, Fold:%d] Average Training loss: %.4f' % (epoch + 1, kf_index + 1,
+        logger.info('[Fold:%d, Epoch:%d] Average Training loss: %.4f' % (kf_index + 1, epoch+1,
                                                                    epoch_loss / len(train_dataloader)))
-        logger.info('[Epoch:%d, Fold:%d] Average Training MAE: %.4f' % (epoch+1, kf_index + 1,
+        logger.info('[Fold:%d, Epoch:%d] Average Training MAE: %.4f' % (kf_index + 1, epoch+1,
                                                                   epoch_mae / len(train_dataloader)))
         # 保存验证集验证最优的模型
         validate_mae = mf.evaluate(model, validate_dataloader)
+        logger.info('[Fold: %d, Epoch: %d] Validation MAE: %.4f' % (kf_index + 1, epoch + 1, validate_mae))
         if validate_mae < MAE:
             save_model(model, extra=f'Fold_{kf_index + 1}_Epoch_{epoch + 1}')
             MAE = validate_mae
@@ -171,7 +172,6 @@ for kf_index, (train_indexes, validate_indexes) in enumerate(kf.split(path)):
             multisite_test_mae = mf.evaluate(model, multisite_test_dataloader)
 
             logger.info('*' * 25 + ' Better Model ' + '*' * 25)
-            logger.info('[Fold: %d, Epoch: %d] Validation MAE: %.4f' % (epoch + 1, kf_index + 1, validate_mae))
             logger.info('[HCP Test] MAE is: %.4f' % hcp_test_mae)
             logger.info('[Multisite Test] MAE is: %.4f' % multisite_test_mae)
             logger.info('*' * 25 + ' Better Model ' + '*' * 25)
