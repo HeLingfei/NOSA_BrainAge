@@ -121,10 +121,10 @@ for kf_index, (train_indexes, validate_indexes) in enumerate(kf.split(path)):
     validate_dataloader = get_data_loader_by_indexes(paths=path, labels=label, indexes=train_indexes,
                                                      data_augment=False, b_size=1)
     early_stop_counter = 0
-    model.train()
     for epoch in range(Epoch):
         epoch_loss = 0
         epoch_mae = 0
+        model.train()
         for i, (data_t, label_t) in enumerate(train_dataloader):
             train_x = data_t
             train_y = torch.LongTensor(label_t)
