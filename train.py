@@ -152,14 +152,14 @@ for kf_index, (train_indexes, validate_indexes) in enumerate(kf.split(path)):
             epoch_mae += loss2.item()
 
             if i % 10 == 9:
-                logger.info(f'[Epoch:{epoch + 1}, Fold:{kf_index+1}, Left_Iter:{len(train_dataloader)-(i+1)}] '
-                      f'Loss:{"%.4f"%loss.item()}, MAE:{"%.4f"%loss2.item()}')
+                logger.info(f'[Fold:{kf_index + 1}, Epoch:{epoch + 1}, Left_Iter:{len(train_dataloader) - (i + 1)}] '
+                            f'Loss:{"%.4f" % loss.item()}, MAE:{"%.4f" % loss2.item()}')
 
         model.eval()
-        logger.info('[Fold:%d, Epoch:%d] Average Training loss: %.4f' % (kf_index + 1, epoch+1,
-                                                                   epoch_loss / len(train_dataloader)))
-        logger.info('[Fold:%d, Epoch:%d] Average Training MAE: %.4f' % (kf_index + 1, epoch+1,
-                                                                  epoch_mae / len(train_dataloader)))
+        logger.info('[Fold:%d, Epoch:%d] Average Training loss: %.4f' % (kf_index + 1, epoch + 1,
+                                                                         epoch_loss / len(train_dataloader)))
+        logger.info('[Fold:%d, Epoch:%d] Average Training MAE: %.4f' % (kf_index + 1, epoch + 1,
+                                                                        epoch_mae / len(train_dataloader)))
         # 保存验证集验证最优的模型
         validate_mae = mf.evaluate(model, validate_dataloader)
         logger.info('[Fold: %d, Epoch: %d] Validation MAE: %.4f' % (kf_index + 1, epoch + 1, validate_mae))
@@ -182,4 +182,3 @@ for kf_index, (train_indexes, validate_indexes) in enumerate(kf.split(path)):
                 logger.info(f'Early Stopping: {kf_index + 1} Fold, {epoch + 1} Epoch')
                 logger.info('*' * 50)
                 break
-
