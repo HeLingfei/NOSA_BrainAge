@@ -22,10 +22,10 @@ from torch.utils.data.dataloader import DataLoader
 #
 # import ssl
 # # ssl._create_default_https_context = ssl._create_unverified_context
-# df = sm.datasets.get_rdataset("Guerry", "HistData", cache=True).data # type: pd.DataFrame
+# df = sm.datasets.get_rdataset("Guerry", "HistData", cache=True).analytical_data # type: pd.DataFrame
 # df = df.dropna()
 # print('数据加载完成')
-# y, X = dmatrices('Lottery ~ Literacy + Wealth + Region', data=df, return_type='dataframe')
+# y, X = dmatrices('Lottery ~ Literacy + Wealth + Region', analytical_data=df, return_type='dataframe')
 # print('设计的数据矩阵转换完成')
 # mod = sm.OLS(y, X)
 # print('模型建立')

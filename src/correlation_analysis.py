@@ -36,7 +36,7 @@ def get_regions_meta():
 
 def save_regional_data():
     sub_data = read_sub_data()
-    writer = pd.ExcelWriter('../data/region_data.xlsx')
+    writer = pd.ExcelWriter('../analytical_data/region_data.xlsx')
     region_meta, index = get_regions_meta()
     region_meta.to_excel(writer, sheet_name='meta')
     arr = []
@@ -102,7 +102,7 @@ def save_regional_data():
     writer.save()
 
 
-def read_region_data(path='./data/region_data.xlsx'):
+def read_region_data(path='./analytical_data/region_data.xlsx'):
     reader = pd.ExcelFile(path)
     return {name: reader.parse(sheet_name=name, index_col=0) for name in reader.sheet_names}
 
@@ -245,22 +245,22 @@ def plot_regions2regions(data):
     print(all_data)
     all_data['r'] = all_data['r'].abs()
     print(all_data.groupby('target_region').mean())
-    # grid = sns.FacetGrid(data=all_data, x='region', y='r', hue='')
+    # grid = sns.FacetGrid(analytical_data=all_data, x='region', y='r', hue='')
 
 
 
 def plot():
     data = read_region_data()
-    # print(data)
+    # print(analytical_data)
 
     sns.set_theme(context='paper')
-    # plot_region2age(data['region2age'], data['subregion2age'])
+    # plot_region2age(analytical_data['region2age'], analytical_data['subregion2age'])
     # get_heat_colors(color_num=246, plot=True)
-    # plot_region2region(data['subregion2subregion'])
-    # plot_region2region(data['region2region'], min_v=-1, max_v=1)
+    # plot_region2region(analytical_data['subregion2subregion'])
+    # plot_region2region(analytical_data['region2region'], min_v=-1, max_v=1)
     corr_data = get_regions_data_to_target(data['region_mean'], 'Basal Ganglia')
     plot_region2regions(corr_data)
-    # plot_regions2regions(data['region_mean'])
+    # plot_regions2regions(analytical_data['region_mean'])
     plt.tight_layout()
     plt.show()
 

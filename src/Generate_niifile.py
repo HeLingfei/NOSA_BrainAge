@@ -4,7 +4,7 @@ import xlwt
 import nibabel as nib
 import numpy as np
 from nilearn import plotting
-atlas = nib.load('../data/BN_Atlas_246_combined_15mm.nii')
+atlas = nib.load('../analytical_data/BN_Atlas_246_combined_15mm.nii')
 affine = atlas.affine
 atlas = np.asarray(atlas.get_fdata(),dtype=np.float32)
 result = np.zeros((atlas.shape))

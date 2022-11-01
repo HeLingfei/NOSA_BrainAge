@@ -25,13 +25,13 @@ batch_size = 12
 LR = 0.005
 Epoch = 1000
 MAE = 4.7
-expdir = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge/results/simple_ckpts'
-logdir = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge/results/train_logs'
-datapath = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge/Train/*.nii'
+expdir = '/HOME/scz0774/run/lfhe/analytical_data/SimpleBrainAge/results/simple_ckpts'
+logdir = '/HOME/scz0774/run/lfhe/analytical_data/SimpleBrainAge/results/train_logs'
+datapath = '/HOME/scz0774/run/lfhe/analytical_data/SimpleBrainAge/Train/*.nii'
 labelpath = './label/Train.csv'
-testdatapath = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge/Test/multisite_test/*.nii'
+testdatapath = '/HOME/scz0774/run/lfhe/analytical_data/SimpleBrainAge/Test/multisite_test/*.nii'
 testlabelpath = './label/multi_center_test.csv'
-test2datapath = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge/Test/hcp_test/*.nii'
+test2datapath = '/HOME/scz0774/run/lfhe/analytical_data/SimpleBrainAge/Test/hcp_test/*.nii'
 test2labelpath = './label/hcp_test.csv'
 
 #mf.set_random_seeds(6)

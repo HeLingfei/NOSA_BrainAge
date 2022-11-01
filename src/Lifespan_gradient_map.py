@@ -113,7 +113,7 @@ for i,(data_t, label_t) in enumerate(train_loader):
 
 grad_sum = abs(grad_sum)
 #体素的梯度
-atlas = nib.load('../data/BN_Atlas_246_combined_15mm.nii')
+atlas = nib.load('../analytical_data/BN_Atlas_246_combined_15mm.nii')
 affine = atlas.affine
 atlas = np.asarray(atlas.get_fdata(),dtype=np.float32)
 result = grad_sum/len(train_path)

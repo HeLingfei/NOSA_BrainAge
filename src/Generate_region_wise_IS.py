@@ -86,7 +86,7 @@ for i in range(0, 555):
     Allsub_res[i][0] = abs(pred_single_sub_age[i] - test_label[i])
 
 # 删除单个脑区测试
-atlas = nib.load('../data/BN_Atlas_246_combined_15mm.nii')
+atlas = nib.load('../analytical_data/BN_Atlas_246_combined_15mm.nii')
 atlas = np.asarray(atlas.get_fdata(), dtype=np.float32)
 
 region_names = region_meta['region'].unique().tolist()
@@ -119,7 +119,7 @@ for i in range(0, 555):
         Allsub_res[i][k] = (Allsub_res[i][k] - min) / (max - min)
 
 try:
-    writer = pd.ExcelWriter('../data/hcp_region_IS.xlsx', engine='xlsxwriter')
+    writer = pd.ExcelWriter('../analytical_data/hcp_region_IS.xlsx', engine='xlsxwriter')
     dataframe = pd.DataFrame(Allsub_res)
     dataframe.to_excel(writer)
     writer.save()

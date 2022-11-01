@@ -28,7 +28,7 @@ torch.set_default_tensor_type(torch.FloatTensor)
 
 
 def test_model_inference():
-    # base_data_dir = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge'
+    # base_data_dir = '/HOME/scz0774/run/lfhe/analytical_data/SimpleBrainAge'
     base_data_dir = r'D:\documents\AcademicDocuments\MasterCandidate\research\文献\可解释脑龄预测工作汇总\数据'
 
     datapath = f'{base_data_dir}/Train/*.nii'
@@ -180,7 +180,7 @@ def plot_7networks_IS_by_age_groups(kind="regress"):
     age_groups = ['[8,20)', '[20,30)', '[30,40)',
                   '[40,50)', '[50,60)', '[60,70)', '[70,80]']
     abbrs = ['VN', 'LN', 'DAN', 'VAN', 'SMN', 'FPN', 'DMN']
-    colors = pd.read_csv('../data/7NetworksColors.csv')['Hex'].tolist()
+    colors = pd.read_csv('../analytical_data/7NetworksColors.csv')['Hex'].tolist()
     pd.set_option('display.unicode.ambiguous_as_wide', True)
     pd.set_option('display.unicode.east_asian_width', True)
     all_subs = get_all_sub_mean_by_age(dir_path, net_info)
@@ -270,7 +270,7 @@ def get_regression_data(one_net_data, cat_meta):
 
 
 def plot_with_regression_line(cat_data, **kwargs):
-    data = kwargs['data']
+    data = kwargs['analytical_data']
     reg_data = get_regression_data(data, cat_data)
     reg_line_data = pd.DataFrame(reg_data['reg_x'])
     reg_line_data.insert(1, 'IS', reg_data['pred_y'])

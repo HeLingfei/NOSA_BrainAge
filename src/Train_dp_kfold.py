@@ -28,7 +28,7 @@ Epoch = 1000
 MAE = 100
 
 current_id = uuid.uuid1()
-base_data_dir = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge'
+base_data_dir = '/HOME/scz0774/run/lfhe/analytical_data/SimpleBrainAge'
 # base_data_dir = r'D:\documents\AcademicDocuments\MasterCandidate\research\文献\可解释脑龄预测工作汇总\数据'
 
 datapath = f'{base_data_dir}/Train/*.nii'
@@ -40,7 +40,7 @@ testlabelpath = f'{base_data_dir}/Test/multisite_test/Test.csv'
 test2datapath = f'{base_data_dir}/Test/hcp_test/*.nii'
 test2labelpath = f'{base_data_dir}/Test/hcp_test/hcp_test.csv'
 
-base_results_dir = '/HOME/scz0774/run/lfhe/data/SimpleBrainAge/results'
+base_results_dir = '/HOME/scz0774/run/lfhe/analytical_data/SimpleBrainAge/results'
 # base_results_dir = r'D:\documents\AcademicDocuments\MasterCandidate\research\文献\可解释脑龄预测工作汇总\程序\simple_brain_age_73' \
 #                    r'\Result'
 expdir = f'{base_results_dir}/simple_ckpts'

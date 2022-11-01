@@ -81,7 +81,7 @@ mae,pred_single_sub_age1 = mf.evaluate(model,test_loader,True)
 #删除单个脑区测试
 temp = []
 pred_single_sub_age2 = []
-atlas = nib.load('../data/BN_Atlas_246_combined_15mm.nii')
+atlas = nib.load('../analytical_data/BN_Atlas_246_combined_15mm.nii')
 atlas = np.asarray(atlas.get_fdata(),dtype=np.float32)
 
 for i in range(0,246):

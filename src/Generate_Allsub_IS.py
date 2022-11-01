@@ -81,7 +81,7 @@ for i in range(0,555):
     Allsub_res[i][0] = abs(pred_single_sub_age[i]-test_label[i])
 
 #删除单个脑区测试
-atlas = nib.load('../data/BN_Atlas_246_combined_15mm.nii')
+atlas = nib.load('../analytical_data/BN_Atlas_246_combined_15mm.nii')
 atlas = np.asarray(atlas.get_fdata(),dtype=np.float32)
 
 for i in range(1,247):
