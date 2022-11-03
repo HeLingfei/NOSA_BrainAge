@@ -102,7 +102,7 @@ def save_regional_data():
     writer.save()
 
 
-def read_region_data(path='./analytical_data/region_data.xlsx'):
+def read_region_data(path='../analytical_data/region_data.xlsx'):
     reader = pd.ExcelFile(path)
     return {name: reader.parse(sheet_name=name, index_col=0) for name in reader.sheet_names}
 
@@ -219,7 +219,6 @@ def get_regions_data_to_target(data, target_name, remove_non_sig=False, sig_leve
 
 
 def plot_region2regions(corr_data):
-
     ax = sns.barplot(data=corr_data, x='region', y='r')  # type: plt.Axes
     ax.set_xticklabels(ax.get_xticklabels(), rotation=-90)
     # print(corr_data)
@@ -248,22 +247,37 @@ def plot_regions2regions(data):
     # grid = sns.FacetGrid(analytical_data=all_data, x='region', y='r', hue='')
 
 
-
 def plot():
     data = read_region_data()
     # print(analytical_data)
 
-    sns.set_theme(context='paper')
-    # plot_region2age(analytical_data['region2age'], analytical_data['subregion2age'])
+    # sns.set_theme(context='paper')
+    # plot_region2age(data['region2age'], data['subregion2age'])
     # get_heat_colors(color_num=246, plot=True)
-    # plot_region2region(analytical_data['subregion2subregion'])
+
+    # plot_region2region(data['subregion2subregion'])
     # plot_region2region(analytical_data['region2region'], min_v=-1, max_v=1)
-    corr_data = get_regions_data_to_target(data['region_mean'], 'Basal Ganglia')
+    data['region_mean'].columns = map_str_list(data['region_mean'].columns)
+    corr_data = get_regions_data_to_target(data['region_mean'], 'Thalamus')
     plot_region2regions(corr_data)
-    # plot_regions2regions(analytical_data['region_mean'])
+
+    # plot_regions2regions(data['region_mean'])
     plt.tight_layout()
+    sns.despine()
     plt.show()
 
 
+def map_list(funcs, l):
+    result = l
+    for str_func in funcs:
+        result = list(map(str_func, result))
+    return result
+
+
+def map_str_list(l):
+    return map_list([str.strip, str.capitalize], l)
+
+
 # save_regional_data()
-plot()
+if __name__ == '__main__':
+    plot()

@@ -40,10 +40,11 @@ def get_grid_data(region2age, y_cate='kind'):
 
 # 默认第一列为x,with_regression为True时，根据orders创建多项式回归
 def plot_grid(data, y_cate='kind', orders=None, correlations=None, set_args=None, x_label='', y_label='',
-              pallete='Set2'):
+              pallete='Set2', col_num=6):
     pallete = sns.color_palette('Set2', len(data.columns) - 1)
     grid_data = get_grid_data(data, y_cate=y_cate)
-    grid = sns.FacetGrid(grid_data, col=y_cate, col_wrap=6, palette=pallete)
+    grid_data['region'] = list(map(str.capitalize, map(str.strip, grid_data['region'])))
+    grid = sns.FacetGrid(grid_data, col=y_cate, col_wrap=col_num, palette=pallete)
     if set_args is not None:
         grid.set(**set_args)
     grid.set_xlabels(x_label)
@@ -60,7 +61,7 @@ def plot_grid(data, y_cate='kind', orders=None, correlations=None, set_args=None
         sns.scatterplot(data=data, x=data.columns.tolist()[0], y='y', color=color)
         if orders is not None:
             order = orders[current_index]
-            column_names = data.columns.tolist()
+            column_names = map_str_list(data.columns.tolist())
             reg_data = get_regression_data(data=data, order=order)
             reg_line_data = pd.DataFrame(reg_data['reg_x'])
             reg_line_data.insert(1, column_names[1], reg_data['pred_y'])
@@ -144,6 +145,9 @@ def get_regression_data(data, order):
 def plot_init():
     plt.rcParams.update({'figure.dpi': 350})
     sns.set_theme(context='paper', palette='Set2')
+    sns.set_style(style='ticks')
+    plt.rcParams['xtick.direction'] = 'in'
+    plt.rcParams['ytick.direction'] = 'in'
 
 
 def load_init_data(arg={'num': None}, kind='region2age'):
@@ -189,25 +193,32 @@ def load_init_data(arg={'num': None}, kind='region2age'):
 
 def plot_finish():
     plt.tight_layout()
+    sns.despine()
     plt.show()
     plt.close()
 
 
-def plot_region2age_reg(num=None):
+def plot_region2age_reg(num=None, col_num=6):
     plot_init()
+    x_label = 'Chronological age'
     region_IS, region_orders, sorted_region2age = load_init_data(arg={'num': num})
     plot_grid(region_IS, y_cate='region', orders=region_orders, correlations=sorted_region2age,
-              set_args={'xticks': [8, 20, 30, 40, 50, 60, 70, 80]}, x_label='Chronological Age', y_label='IS')
+              set_args={'xticks': [8, 20, 30, 40, 50, 60, 70, 80]}, x_label=x_label.strip().capitalize(), y_label='IS',
+              col_num=col_num)
 
     plot_finish()
 
 
 def plot_multiline_region2age():
     plot_init()
-    sns.set(font_scale=1.2)
+    sns.set(font_scale=1.2, style='ticks')
+    plt.rcParams['xtick.direction'] = 'in'
+    plt.rcParams['ytick.direction'] = 'in'
     region_IS, region_orders, sorted_region2age = load_init_data(arg={'num': 6})
     grid_data = get_grid_data(region_IS, y_cate='region')
+    grid_data['region'] = map_str_list(grid_data['region'])
     region_names = grid_data['region'].unique().tolist()
+    print(region_names)
     palette = sns.color_palette('Set2', len(region_names))
 
     line_data = []
@@ -231,16 +242,30 @@ def plot_multiline_region2age():
     legend = ax.get_legend()  # type: Legend
     legend.set_title('')
     ax.figure.set_size_inches(10, 6)
-    ax.set_xlabel('Chronological Age')
+    x_label = 'Chronological Age'
+    ax.set_xlabel(x_label.capitalize())
     ax.set_ylabel('IS')
     ax.set_xticks([8, 20, 30, 40, 50, 60, 70, 80])
     plot_finish()
 
 
+def map_list(funcs, l):
+    result = l
+    for str_func in funcs:
+        result = list(map(str_func, result))
+    return result
 
-plot_region2age_reg()
-# plot_region2age_reg(num=6)
-# plot_multiline_region2age()
+
+def map_str_list(l):
+    return map_list([str.strip, str.capitalize], l)
+
+
+# plot_region2age_reg()
+
+# plot_region2age_reg(num=6, col_num=3)
+if __name__ == '__main__':
+    plot_multiline_region2age()
+
 # region2region = load_init_data({'num': 6}, kind='region2region')  # type: pd.DataFrame
 # print(region2region)
 # matrix = np.array(region2region)

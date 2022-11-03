@@ -21,6 +21,7 @@ from Make_datasets import Mydataset
 from Network import My_Network
 import statsmodels.formula.api as smf
 import matplotlib.patheffects as pe
+from regression_analysis import plot_init, plot_finish, map_str_list
 from statsmodels.stats.outliers_influence import summary_table
 
 warnings.filterwarnings('ignore')
@@ -233,7 +234,7 @@ def save_network_data(path):
 # save_network_data('./7network_data.xlsx')
 
 
-def load_network_data(path='./7network_data.xlsx'):
+def load_network_data(path='../analytical_data/7network_data.xlsx'):
     reader = pd.ExcelFile(path)
     net_meta = reader.parse(sheet_name='net_meta')
     net_data = reader.parse(sheet_name='net_data')
@@ -270,7 +271,7 @@ def get_regression_data(one_net_data, cat_meta):
 
 
 def plot_with_regression_line(cat_data, **kwargs):
-    data = kwargs['analytical_data']
+    data = kwargs['data']
     reg_data = get_regression_data(data, cat_data)
     reg_line_data = pd.DataFrame(reg_data['reg_x'])
     reg_line_data.insert(1, 'IS', reg_data['pred_y'])
@@ -283,10 +284,11 @@ def plot_with_regression_line(cat_data, **kwargs):
 def plot_network_grid(net_meta, net_data):
     orders = [1, 2, 2, 2, 2, 2, 2]
     print(net_data)
-    grid = sns.FacetGrid(net_data, col="network_id", col_wrap=3)
+    grid = sns.FacetGrid(net_data, col="network_id", col_wrap=4)
     grid.map_dataframe(plot_with_regression_line, cat_data=net_meta, orders=orders)
     grid.set(xticks=[8, 20, 30, 40, 50, 60, 70, 80])
-    grid.set_xlabels('Chronological Age')
+    x_label = 'Chronological Age'
+    grid.set_xlabels(x_label.capitalize())
     for index, ax in enumerate(grid.axes):  # type: int, plt.Axes
         ax.set_title(net_meta.iloc[index]['abbr'], fontsize='large')
 
@@ -294,9 +296,9 @@ def plot_network_grid(net_meta, net_data):
         model = get_regression_data(one_net_data, net_meta)['fitted_model']
         ax.legend(loc="upper right", handlelength=0, handletextpad=0, shadow=False,
                   labels=[r'$\it{R2}$ = %.2f' % model.rsquared])
-        if index == 0:
-            fig = ax.get_figure()
-            fig.add_subplot()
+        # if index == 0:
+        #     fig = ax.get_figure()
+        #     fig.add_subplot()
     grid.tight_layout()
     plt.show()
 
@@ -333,12 +335,15 @@ def plot_networks(net_meta, net_data):
     ax.figure.set_size_inches(16, 8)
     handlers, labels = ax.get_legend_handles_labels()
     ax.legend(loc='upper left', title=None, handles=handlers, labels=[label + ' (***)' for label in labels], fontsize="x-large")
-    ax.set_xlabel('Chronological Age', fontsize="x-large")
+    x_label = 'Chronological Age'
+    ax.set_xlabel(x_label.capitalize(), fontsize="x-large")
     ax.set_ylabel(ax.get_ylabel(), fontsize="x-large")
+    sns.despine()
     plt.tight_layout()
     plt.show()
 
 
+plot_init()
 net_meta, net_data = load_network_data()
 # plot_network_grid(net_meta, net_data)
 plot_networks(net_meta, net_data)
